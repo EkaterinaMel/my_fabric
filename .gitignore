@@ -1,32 +1,111 @@
-# Prerequisites
-*.d
+#include <iostream>
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+using namespace std;
 
-# Precompiled Headers
-*.gch
-*.pch
+// фабрикааа шоколада
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
+class Chocolate {
+protected:
+	int weight = 0; // вес шоколадки
+public:
+	virtual ~Chocolate(){};
+	virtual void info()=0;
+	int getWeight() {
+		cout << "My weight is " << weight << " kg. ";
+		if (weight<0) cout << "I am so thin... ";
+		if (weight > 100) cout << "I am so fat... ";
+		cout << "\n";
+		return weight;
+	}
 
-# Fortran module files
-*.mod
-*.smod
+};
 
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
+// молочные шоколадки
+class milkChoco : public Chocolate {
+public:
+	milkChoco(int w) {
+		weight = w;
+	}
+	void info() {
+		cout << "I am tasty milk chocolate. But you cannot eat me... ";
+		int n = this->getWeight();
 
-# Executables
-*.exe
-*.out
-*.app
+
+	}
+};
+
+// темные шоколадки
+class darkChoco : public Chocolate {
+public:
+	darkChoco(int w) {
+		weight = w;
+	}
+	void info() {
+
+		cout << "I am not very tasty dark chocolate. But you cannot eat me... ";
+		int n = this->getWeight();
+	}
+};
+
+// белые шоколадки
+class whiteChoco : public Chocolate {
+public:
+	whiteChoco(int w) {
+		weight = w;
+	}
+	void info() {
+
+		cout << "I am white chocolate. But you still cannot eat me... ";
+		int n = this->getWeight();
+	}
+};
+
+// фабрики для шоколадок 
+class Factory {
+public:
+	virtual ~Factory(){}
+	virtual Chocolate* createChoco(int w) = 0;
+};
+
+class MilkChocoFactory : public Factory
+{
+public:
+	Chocolate* createChoco(int w) {
+		return new milkChoco(w);
+	}
+};
+
+class DarkChocoFactory : public Factory
+{
+public:
+	Chocolate* createChoco(int w) {
+		return new darkChoco(w);
+	}
+};
+
+class WhiteChocoFactory : public Factory
+{
+public:
+	Chocolate* createChoco(int w) {
+		return new whiteChoco(w);
+	}
+};
+
+
+int main() {
+	MilkChocoFactory* Milk_Factory = new MilkChocoFactory;
+	auto milk_bar = Milk_Factory->createChoco(5);
+	milk_bar->info();
+
+	DarkChocoFactory* Dark_Factory = new DarkChocoFactory;
+	auto dark_bar = Dark_Factory->createChoco(-5);
+	dark_bar->info();
+
+	WhiteChocoFactory* White_Factory = new WhiteChocoFactory;
+	auto white_bar = White_Factory->createChoco(102);
+	white_bar->info();
+
+
+	system("pause");
+	return 0;
+}
